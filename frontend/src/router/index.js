@@ -10,9 +10,10 @@ const routes = [
   { path: '/expediente/:id', name: 'expediente-detalle', component: ExpedienteDetalle, props: true },
   { path: '/subir-documento', name: 'subir-documento', component: SubirDocumento },
 ]
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [],
+  routes,
 })
 
 export default router
