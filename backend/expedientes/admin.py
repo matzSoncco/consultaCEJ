@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Expediente, Documento
 
-# Register your models here.
+admin.site.register(Expediente)
+admin.site.register(Documento)
