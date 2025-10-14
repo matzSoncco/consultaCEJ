@@ -1,0 +1,71 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+*.pot
+*.pyc
+*.sqlite3
+db.sqlite3
+*.env
+.env
+.DS_Store
+Thumbs.db
+
+#entornos virtuales
+venv/
+.venv/
+env/
+ENV/
+.ENV/
+Scripts/
+pip-log.txt
+pip-delete-this-directory.txt
+
+#archivos temporales de Django
+media/
+staticfiles/
+static/
+tmp/
+*.mo
+
+#archivos de compilación
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.manifest
+*.spec
+
+#archivos de IDEs
+.vscode/
+.idea/
+*.swp
+.project
+.pydevproject
+
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+coverage/
+*.local
+
+#variables de entorno
+.env.production
+.env.local
+.env.development
+
+# Archivos generados
+*.tar
+*.zip
+*.bak
+*.tmp
+
+#credenciales
+.supabase/
+*.sql
+backup.sql
