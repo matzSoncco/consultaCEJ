@@ -3,7 +3,6 @@
     <h1 class="title">Consulta de Expedientes</h1>
     <p class="subtitle">Ingrese los datos para consultar su expediente</p>
 
-    <!-- Formulario -->
     <form @submit.prevent="buscarExpediente" class="form-container">
       <div class="form-group">
         <label for="distrito">Distrito Judicial</label>
@@ -43,7 +42,6 @@
       </button>
     </form>
 
-    <!-- Mensaje de error -->
     <div v-if="error" class="error-message">
       {{ error }}
     </div>
@@ -69,13 +67,11 @@ export default {
     const cargando = ref(false)
     const error = ref(null)
 
-    // 🔎 Función principal
     const buscarExpediente = async () => {
       cargando.value = true
       error.value = null
 
       try {
-        // Petición al backend con query params (Django REST los entiende así)
         const response = await axios.get('http://127.0.0.1:8000/api/expedientes/', {
           params: {
             distrito_judicial: filtros.value.distrito,
@@ -84,13 +80,11 @@ export default {
           }
         })
 
-        // Si el backend devuelve una lista vacía
         if (!response.data.length) {
           error.value = 'No se encontró ningún expediente con esos datos.'
           return
         }
 
-        // Si lo encuentra, redirige al detalle del expediente
         const expediente = response.data[0]
         localStorage.setItem('expediente_id', expediente.id)
         router.push(`/expediente/${expediente.id}`)
