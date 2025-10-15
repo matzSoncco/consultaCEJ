@@ -100,10 +100,12 @@ export default {
       })
     }
 
+    const api = import.meta.env.VITE_API_BASE_URL;
+
     const cargarExpediente = async () => {
       try {
         const expedienteId = route.params.id
-        const response = await axios.get(`http://127.0.0.1:8000/api/expedientes/${expedienteId}/`)
+        const response = await axios.get(`${api}/expedientes/${expedienteId}/`)
         
         expediente.value = response.data
         cargando.value = false

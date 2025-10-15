@@ -252,10 +252,12 @@ export default {
             })
         }
 
+        const api = import.meta.env.VITE_API_BASE_URL;
+
         const cargarExpediente = async () => {
             try {
                 const expedienteId = route.params.id
-                const response = await axios.get(`http://127.0.0.1:8000/api/expedientes/${expedienteId}/`)
+                const response = await axios.get(`${api}/expedientes/${expedienteId}/`)
                 expediente.value = response.data
             } catch (err) {
                 console.error('Error al cargar expediente:', err)
@@ -269,7 +271,7 @@ export default {
                 const expedienteId = route.params.id
                 
                 // Obtener todos los documentos y filtrar por expediente
-                const response = await axios.get('http://127.0.0.1:8000/api/documentos/')
+                const response = await axios.get(`${api}/documentos/`)
                 const todosDocumentos = response.data.filter(doc => doc.expediente === parseInt(expedienteId))
                 
                 totalDocumentos.value = todosDocumentos.length

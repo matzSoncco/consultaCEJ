@@ -174,9 +174,11 @@ export default {
             router.go(-1)
         }
 
+        const api = import.meta.env.VITE_API_BASE_URL;
+
         const cargarExpedientes = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/api/expedientes/')
+                const response = await axios.get(`${api}/expedientes/`)
                 expedientes.value = response.data
             } catch (err) {
                 console.error('Error al cargar expedientes:', err)
