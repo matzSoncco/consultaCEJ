@@ -17,3 +17,5 @@ api.interceptors.request.use(
 );
 
 export default api;
+
+//para que funcione en produccion
