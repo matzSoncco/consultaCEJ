@@ -31,7 +31,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 # CORS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://consultacej.onrender.com",
+    "https://consulta-expedientes.onrender.com",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
