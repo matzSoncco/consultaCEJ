@@ -54,32 +54,39 @@ class DocumentoViewSet(viewsets.ModelViewSet):
     serializer_class = DocumentoSerializer
 
     def create(self, request, *args, **kwargs):
+        # Obtener el archivo desde request.FILES
         archivo = request.FILES.get('archivo_pdf')
 
-        if archivo:
-            # Validar sin archivo_pdf
-            data = request.data.copy()
-            data.pop('archivo_pdf', None)
-            serializer = self.get_serializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            documento = serializer.save()
+        # Campos de texto
+        data = {
+            'expediente': request.data.get('expediente'),
+            'fecha': request.data.get('fecha'),
+            'acto_procesal': request.data.get('acto_procesal'),
+            'resolucion': request.data.get('resolucion'),
+            'sumilla': request.data.get('sumilla'),
+        }
 
-            # Subir a Supabase
+        # Crear el documento primero
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        documento = serializer.save()
+
+        # Si hay archivo, subimos a Supabase
+        if archivo:
             supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
             nombre_archivo = f"{documento.id}_{archivo.name}"
             ruta = f"expediente_{documento.expediente.id}/{nombre_archivo}"
 
+            # Subir el archivo
             supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
                 ruta,
                 archivo.read(),
                 {"content-type": "application/pdf"}
             )
 
+            # Obtener URL pública
             url = supabase.storage.from_(settings.SUPABASE_BUCKET).get_public_url(ruta)
-
             documento.archivo_pdf = url
             documento.save()
 
-            return Response(self.get_serializer(documento).data, status=status.HTTP_201_CREATED)
-
-        return super().create(request, *args, **kwargs)
+        return Response(self.get_serializer(documento).data, status=status.HTTP_201_CREATED)
