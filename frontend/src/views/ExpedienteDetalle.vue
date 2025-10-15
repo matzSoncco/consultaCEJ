@@ -230,7 +230,6 @@ export default {
         const cargandoDocumentos = ref(true)
         const errorDocumentos = ref(null)
         
-        // Paginación
         const paginaActual = ref(1)
         const documentosPorPagina = 5
         const totalDocumentos = ref(0)
@@ -241,7 +240,11 @@ export default {
 
         const formatearFecha = (fecha) => {
             if (!fecha) return 'N/A'
-            const date = new Date(fecha)
+            
+            // Parsear la fecha como UTC y no aplicar conversión de zona horaria
+            const [year, month, day] = fecha.split('-')
+            const date = new Date(year, month - 1, day)
+            
             return date.toLocaleDateString('es-PE', {
                 year: 'numeric',
                 month: 'long',
@@ -298,10 +301,8 @@ export default {
                 return
             }
 
-            // Usar la URL directamente del JSON
             const urlDescarga = documento.archivo_pdf
 
-            // Crear un enlace temporal y hacer clic en él para descargar
             const link = document.createElement('a')
             link.href = urlDescarga
             link.download = `documento_${documento.id}.pdf`

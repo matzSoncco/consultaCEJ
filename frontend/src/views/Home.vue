@@ -1,7 +1,6 @@
 <template>
   <section class="home-container">
-    <h1 class="title">Consulta de Expedientes</h1>
-    <p class="subtitle">Ingrese los datos para consultar su expediente</p>
+    <h1 class="title">Búsqueda de Expedientes</h1>
 
     <form @submit.prevent="buscarExpediente" class="form-container">
       <div class="form-group">
@@ -10,7 +9,7 @@
           type="text"
           id="distrito"
           v-model="filtros.distrito"
-          placeholder="Ejemplo: Puno"
+          placeholder="PUNO"
           required
         />
       </div>
@@ -20,8 +19,10 @@
         <input
           type="text"
           id="numero"
-          v-model="filtros.numero"
-          placeholder="Ejemplo: 0101010"
+          v-model="numeroFormateado"
+          @input="formatearNumeroExpediente"
+          placeholder="00704-2021-0-2101-JR-LA-01"
+          maxlength="29"
           required
         />
       </div>
@@ -32,7 +33,7 @@
           type="text"
           id="parte"
           v-model="filtros.parte"
-          placeholder="Ejemplo: SONCCO MAX"
+          placeholder="BUSTINZA CARCASI"
           required
         />
       </div>
@@ -86,6 +87,27 @@ export default {
     const error = ref(null)
     const captchaTexto = ref('')
     const captchaInput = ref('')
+
+    const numeroFormateado = ref('')
+
+    const formatearNumeroExpediente = (event) => {
+      let valor = event.target.value.replace(/[^0-9A-Za-z]/g, '') // Solo alfanuméricos
+      let formateado = ''
+      
+      // Formato: 00704-2021-0-2101-JR-LA-01
+      // Patrón: 5-4-1-4-2-2-2
+      if (valor.length > 0) formateado += valor.substring(0, 5)
+      if (valor.length > 5) formateado += '-' + valor.substring(5, 9)
+      if (valor.length > 9) formateado += '-' + valor.substring(9, 10)
+      if (valor.length > 10) formateado += '-' + valor.substring(10, 14)
+      if (valor.length > 14) formateado += '-' + valor.substring(14, 16)
+      if (valor.length > 16) formateado += '-' + valor.substring(16, 18)
+      if (valor.length > 18) formateado += '-' + valor.substring(18, 20)
+      
+      numeroFormateado.value = formateado
+      // Guardar el valor sin guiones para enviar al backend
+      filtros.value.numero = valor
+    }
 
     const generarCaptcha = () => {
       const caracteres = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'
@@ -144,6 +166,8 @@ export default {
       error, 
       captchaTexto,
       captchaInput,
+      numeroFormateado,
+      formatearNumeroExpediente,
       buscarExpediente,
       generarCaptcha
     }
@@ -165,12 +189,7 @@ export default {
   text-align: center;
   font-size: 1.8rem;
   margin-bottom: 0.3rem;
-}
-
-.subtitle {
-  text-align: center;
-  color: #555;
-  margin-bottom: 2rem;
+  color: #7e1010;
 }
 
 .form-container {
@@ -187,6 +206,7 @@ export default {
 label {
   margin-bottom: 0.5rem;
   font-weight: 500;
+  color: #7e1010;
 }
 
 input {
@@ -217,7 +237,7 @@ input {
 }
 
 .btn-refresh {
-  background: #28a745;
+  background: #9b9b9b;
   color: white;
   border: none;
   padding: 0.5rem 0.8rem;
@@ -227,7 +247,7 @@ input {
 }
 
 .btn-refresh:hover {
-  background: #218838;
+  background: #8d8d8d;
 }
 
 .btn-buscar {
@@ -242,7 +262,7 @@ input {
 }
 
 .btn-buscar:hover {
-  background-color: #0056b3;
+  background-color: #690c0d;
 }
 
 .btn-buscar:disabled {
