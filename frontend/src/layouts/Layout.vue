@@ -22,7 +22,7 @@ import Footer from '@/components/Footer.vue'
 
 .main-content {
   flex: 1;
-  padding: 2rem;
+  padding: 5px;
   background-color: #f8f9fa;
 }
 </style>

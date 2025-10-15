@@ -6,8 +6,8 @@ import SubirDocumentos from '@/views/SubirDocumentos.vue'
 
 const routes = [
   { path: '/', name: 'home', component: Home },
-  { path: '/expediente', name: 'expediente', component: Expediente },
-  { path: '/expediente/:id', name: 'expediente-detalle', component: ExpedienteDetalle, props: true },
+  { path: '/expediente/:id', name: 'expediente', component: Expediente, props: true },
+  { path: '/expediente/:id/detalle', name: 'expediente-detalle', component: ExpedienteDetalle, props: true },
   { path: '/subir-documento', name: 'subir-documento', component: SubirDocumentos },
 ]
 
