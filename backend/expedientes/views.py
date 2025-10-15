@@ -50,7 +50,7 @@ class ExpedienteViewSet(viewsets.ModelViewSet):
         return queryset
 
 class DocumentoViewSet(viewsets.ModelViewSet):
-    queryset = Documento.objects.all()
+    queryset = Documento.objects.all().order_by('id')
     serializer_class = DocumentoSerializer
 
     def create(self, request, *args, **kwargs):
