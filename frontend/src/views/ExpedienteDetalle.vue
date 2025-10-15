@@ -21,18 +21,62 @@
                         <span class="dato-valor">JUZGADO DE TRABAJO - PUNO</span>
                     </div>
                     <div class="dato-item">
-                        <span class="dato-label">Órgano Jurisdiccional:</span>
-                        <span class="dato-valor">{{ expediente.organo_jurisdiccional || 'N/A' }}</span>
+                        <span class="dato-label">Juez:</span>
+                        <span class="dato-valor">RAMOS CHAHUARES KELLY YESENIA</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Fecha de Inicio:</span>
+                        <span class="dato-valor">02/09/2021</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Observación:</span>
+                        <span class="dato-valor">NINGUNA</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Materia(s):</span>
+                        <span class="dato-valor">ACCION COTENCIOSA ADMINISTRATIVA</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Etapa Procesal:</span>
+                        <span class="dato-valor">GENERAL</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Ubicación:</span>
+                        <span class="dato-valor">POOL ASIST. JUDICIAL</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Sumilla:</span>
+                        <span class="dato-valor">DEMANDA COTENCIOSA ADMINISTRATIVA</span>
                     </div>
                 </div>
                 <div class="derecha">
                     <div class="dato-item">
-                        <span class="dato-label">Especialidad:</span>
-                        <span class="dato-valor">{{ expediente.especialidad || 'N/A' }}</span>
+                        <span class="dato-label">Distrito Judicial:</span>
+                        <span class="dato-valor">{{ expediente.distrito_judicial || '-------' }}</span>
                     </div>
                     <div class="dato-item">
-                        <span class="dato-label">Estado:</span>
-                        <span class="dato-valor">{{ expediente.estado || 'N/A' }}</span>
+                        <span class="dato-label">Especialista Legal:</span>
+                        <span class="dato-valor">OBANDO MAMANI MELISSA ARIAN</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Proceso:</span>
+                        <span class="dato-valor">Urgente</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Especialidad:</span>
+                        <span class="dato-valor">LABORAL</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Sumilla:</span>
+                        <span class="dato-valor">DEMANDA COTENCIOSA ADMINISTRATIVA</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Fecha Conclusión:</span>
+                        <span class="dato-valor">{{ expediente.especialidad || '------' }}</span>
+                    </div>
+                    <div class="dato-item">
+                        <span class="dato-label">Motivo Conclusión:</span>
+                        <span class="dato-valor">{{ expediente.estado || '------' }}</span>
                     </div>
                 </div>
             </div>
@@ -40,26 +84,44 @@
 
         <div class="panel">
             <div class="titulo">
-                <h2>Partes del Proceso</h2>
+                <h2>Partes Procesales</h2>
             </div>
-            <div class="datos">
-                <div class="dato-item">
-                    <span class="dato-label">Demandante/Denunciante:</span>
-                    <span class="dato-valor">{{ expediente.parte || 'N/A' }}</span>
-                </div>
-                <div class="dato-item">
-                    <span class="dato-label">Materia:</span>
-                    <span class="dato-valor">{{ expediente.materia || 'N/A' }}</span>
-                </div>
-                <div class="dato-item">
-                    <span class="dato-label">Fecha de Inicio:</span>
-                    <span class="dato-valor">{{ formatearFecha(expediente.fecha_inicio) }}</span>
-                </div>
-                <div class="dato-item">
-                    <span class="dato-label">Juez/Magistrado:</span>
-                    <span class="dato-valor">{{ expediente.juez || 'No asignado' }}</span>
-                </div>
-            </div>
+            <table>
+                <thead class="tabla-partes">
+                    <tr>
+                    <th>Parte</th>
+                    <th>Tipo de Persona</th>
+                    <th>Apellido Paterno/Razón Social</th>
+                    <th>Apellido Materno</th>
+                    <th>Nombres</th>
+                    </tr>
+                </thead>
+                <tbody class="tabla-partes-body">
+                    <tr>
+                    <td>DEMANDANTE</td>
+                    <td>NATURAL</td>
+                    <td>BUSTINZA</td>
+                    <td>CARCASI</td>
+                    <td>ISMAEL ALEJANDRO</td>
+                    </tr>
+                    <tr>
+                    <td>DEMANDADO</td>
+                    <td>JURÍDICA</td>
+                    <td>PROCURADOR PUBLICO DEL GOBIERNO REGIONAL DE PUNO</td>
+                    </tr>
+                    <tr>
+                    <td>DEMANDADO</td>
+                    <td>JURÍDICA</td>
+                    <td>RED DE SALUD EL COLLAO ILAVE</td>
+                    </tr>
+                    <tr>
+                    
+                    </tr>
+                    <tr>
+                    
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="panel">
@@ -311,6 +373,49 @@ export default {
     overflow: hidden;
 }
 
+/* Estilos para la tabla de Partes Procesales */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.tabla-partes th {
+    color: #721c24;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tabla-partes th:last-child {
+    border-right: none;
+}
+
+.tabla-partes-body tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-partes-body tr:last-child {
+    border-bottom: none;
+}
+
+.tabla-partes-body td {
+    padding: 12px 15px;
+    color: #000000;
+    font-size: 0.9rem;
+    vertical-align: top;
+}
+
+.tabla-partes-body tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.tabla-partes-body tr:hover {
+    background-color: #f0f0f0;
+}
+
 .titulo {
     background-color: #5a6268;
     padding: 8px 10px;
@@ -321,7 +426,7 @@ export default {
     color: white;
     font-size: 25px;
     font-weight: 100;
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: sans-serif;
 }
 
 .expediente-item {
@@ -336,7 +441,7 @@ export default {
     padding: 0 10px 0 10px;
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     font-size: 15px;
 }
 
