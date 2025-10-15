@@ -13,7 +13,6 @@ import Header from '@/components/Header.vue'
 import Footer from '@/components/Footer.vue'
 </script>
 
-
 <style scoped>
 .app-container {
   display: flex;
@@ -24,6 +23,6 @@ import Footer from '@/components/Footer.vue'
 .main-content {
   flex: 1;
   padding: 2rem;
-  background: #f8f9fa;
+  background-color: #f8f9fa;
 }
 </style>
