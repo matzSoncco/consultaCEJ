@@ -76,11 +76,6 @@ export default {
       numero_expediente: '',
       distrito_judicial: '',
       parte: '',
-      organo_jurisdiccional: '',
-      especialidad: '',
-      materia: '',
-      estado: '',
-      fecha_inicio: ''
     })
 
     const cargando = ref(true)
@@ -295,7 +290,6 @@ export default {
 
 .btn-detalles:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
 }
 
 .error-message {
