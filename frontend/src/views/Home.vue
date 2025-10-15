@@ -119,44 +119,63 @@ export default {
     }
 
     const buscarExpediente = async () => {
-      error.value = null
+  error.value = null
 
-      if (captchaInput.value.trim() !== captchaTexto.value.trim()) {
-        error.value = 'Captcha incorrecto. Intente nuevamente.'
-        generarCaptcha()
-        return
+  // 1️⃣ Revisar el valor del captcha
+  console.log('Captcha ingresado:', captchaInput.value)
+  console.log('Captcha correcto:', captchaTexto.value)
+
+  if (captchaInput.value.trim() !== captchaTexto.value.trim()) {
+    error.value = 'Captcha incorrecto. Intente nuevamente.'
+    generarCaptcha()
+    return
+  }
+
+  cargando.value = true
+
+  const api = import.meta.env.VITE_API_BASE_URL;
+  console.log('API Base URL:', api)
+
+  try {
+    // 2️⃣ Revisar los filtros formateados antes de enviarlos
+    const distrito = filtros.value.distrito.trim().toUpperCase()
+    const numero = filtros.value.numero.replace(/[^0-9A-Za-z]/g, '').toUpperCase()
+    const parte = filtros.value.parte.trim().toUpperCase()
+
+    console.log('Filtros a enviar:', { distrito, numero, parte })
+
+    const response = await axios.get(`${api}/expedientes/`, {
+      params: {
+        distrito_judicial: distrito,
+        numero_expediente: numero,
+        parte: parte
       }
+    })
 
-      cargando.value = true
+    // 3️⃣ Revisar la respuesta completa de la API
+    console.log('Respuesta de la API:', response)
 
-      const api = import.meta.env.VITE_API_BASE_URL;
-
-      try {
-        const response = await axios.get(`${api}/expedientes/`, {
-          params: {
-            distrito_judicial: filtros.value.distrito,
-            numero_expediente: filtros.value.numero,
-            parte: filtros.value.parte
-          }
-        })
-
-        if (!response.data.length) {
-          error.value = 'No se encontró ningún expediente con esos datos.'
-          generarCaptcha()
-          return
-        }
-
-        const expediente = response.data[0]
-        sessionStorage.setItem('expediente_id', expediente.id)
-        router.push(`/expediente/${expediente.id}`)
-      } catch (err) {
-        console.error(err)
-        error.value = 'Ocurrió un error al buscar el expediente.'
-        generarCaptcha()
-      } finally {
-        cargando.value = false
-      }
+    if (!response.data.length) {
+      console.log('No se encontró ningún expediente.')
+      error.value = 'No se encontró ningún expediente con esos datos.'
+      generarCaptcha()
+      return
     }
+
+    const expediente = response.data[0]
+    console.log('Expediente encontrado:', expediente)
+
+    sessionStorage.setItem('expediente_id', expediente.id)
+    router.push(`/expediente/${expediente.id}`)
+  } catch (err) {
+    // 4️⃣ Mostrar el error completo
+    console.error('Error al hacer la consulta:', err)
+    error.value = 'Ocurrió un error al buscar el expediente.'
+    generarCaptcha()
+  } finally {
+    cargando.value = false
+  }
+}
 
     onMounted(() => {
       generarCaptcha()
