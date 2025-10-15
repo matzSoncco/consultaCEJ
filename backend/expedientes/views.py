@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, status
 from .models import Expediente, Documento
 from .serializers import ExpedienteSerializer, DocumentoSerializer
 from rest_framework.response import Response
@@ -52,36 +52,34 @@ class ExpedienteViewSet(viewsets.ModelViewSet):
 class DocumentoViewSet(viewsets.ModelViewSet):
     queryset = Documento.objects.all()
     serializer_class = DocumentoSerializer
-    
+
     def create(self, request, *args, **kwargs):
         archivo = request.FILES.get('archivo_pdf')
-        
+
         if archivo:
-            # Crear el documento primero
-            serializer = self.get_serializer(data=request.data)
+            # Validar sin archivo_pdf
+            data = request.data.copy()
+            data.pop('archivo_pdf', None)
+            serializer = self.get_serializer(data=data)
             serializer.is_valid(raise_exception=True)
             documento = serializer.save()
-            
+
             # Subir a Supabase
             supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
-            
             nombre_archivo = f"{documento.id}_{archivo.name}"
             ruta = f"expediente_{documento.expediente.id}/{nombre_archivo}"
-            
-            # Subir archivo
+
             supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
                 ruta,
                 archivo.read(),
                 {"content-type": "application/pdf"}
             )
-            
-            # Obtener URL pública
+
             url = supabase.storage.from_(settings.SUPABASE_BUCKET).get_public_url(ruta)
-            
-            # Actualizar documento con la URL
+
             documento.archivo_pdf = url
             documento.save()
-            
+
             return Response(self.get_serializer(documento).data, status=status.HTTP_201_CREATED)
-        
+
         return super().create(request, *args, **kwargs)
