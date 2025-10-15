@@ -129,8 +129,10 @@ export default {
 
       cargando.value = true
 
+      const api = import.meta.env.VITE_API_BASE_URL;
+
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/expedientes/', {
+        const response = await axios.get(`${api}/expedientes/`, {
           params: {
             distrito_judicial: filtros.value.distrito,
             numero_expediente: filtros.value.numero,
