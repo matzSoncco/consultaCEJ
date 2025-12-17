@@ -20,10 +20,8 @@ class Documento(models.Model):
     archivo_pdf = models.URLField(max_length=500, blank=True, null=True)
 
     def guardar_pdf_supabase(self, archivo, nombre_archivo):
-        """Sube el PDF a Supabase Storage"""
         supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
         
-        # Subir archivo
         ruta = f"expediente_{self.expediente.id}/{nombre_archivo}"
         supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
             ruta,
@@ -31,7 +29,6 @@ class Documento(models.Model):
             {"content-type": "application/pdf"}
         )
         
-        # Obtener URL pública
         url = supabase.storage.from_(settings.SUPABASE_BUCKET).get_public_url(ruta)
         self.archivo_pdf = url
         self.save()
