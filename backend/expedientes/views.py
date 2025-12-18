@@ -5,6 +5,8 @@ from .serializers import ExpedienteSerializer, DocumentoSerializer
 from rest_framework.response import Response
 from supabase import create_client
 from django.conf import settings
+import traceback
+import sys
 
 class ExpedienteViewSet(viewsets.ModelViewSet):
     serializer_class = ExpedienteSerializer
@@ -73,20 +75,52 @@ class DocumentoViewSet(viewsets.ModelViewSet):
 
         # Si hay archivo, subimos a Supabase
         if archivo:
-            supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
-            nombre_archivo = f"{documento.id}_{archivo.name}"
-            ruta = f"expediente_{documento.expediente.id}/{nombre_archivo}"
+            try:
+                # LOGS DE DEPURACIÓN PARA RENDER
+                print(f"--- Iniciando subida: {archivo.name} ---")
+                print(f"Bucket: {settings.SUPABASE_BUCKET}")
+                
+                supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+                nombre_archivo = f"{documento.id}_{archivo.name}"
+                # Asegúrate de que expediente_id no sea None
+                exp_id = documento.expediente.id if documento.expediente else "sin_id"
+                ruta = f"expediente_{exp_id}/{nombre_archivo}"
 
-            # Subir el archivo
-            supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
-                ruta,
-                archivo.read(),
-                {"content-type": "application/pdf"}
-            )
+                # 1. Leer el contenido del archivo
+                contenido = archivo.read()
+                
+                # 2. Subir a Supabase
+                # Usamos response para ver qué dice la API de Supabase
+                response = supabase.storage.from_(settings.SUPABASE_BUCKET).upload(
+                    path=ruta,
+                    file=contenido,
+                    file_options={"content-type": archivo.content_type or "application/pdf"}
+                )
+                
+                print(f"Respuesta de Supabase: {response}")
 
-            # Obtener URL pública
-            url = supabase.storage.from_(settings.SUPABASE_BUCKET).get_public_url(ruta)
-            documento.archivo_pdf = url
-            documento.save()
+                # 3. Obtener URL pública
+                url_res = supabase.storage.from_(settings.SUPABASE_BUCKET).get_public_url(ruta)
+                
+                # Nota: Dependiendo de la versión de la librería, 
+                # get_public_url puede devolver un string o un objeto.
+                documento.archivo_pdf = url_res
+                documento.save()
+                print("--- Subida exitosa ---")
+
+            except Exception as e:
+                # ESTO MOSTRARÁ EL ERROR REAL EN LOS LOGS DE RENDER
+                print("--- ERROR CRÍTICO EN SUBIDA ---", file=sys.stderr)
+                print(f"Tipo de error: {type(e).__name__}", file=sys.stderr)
+                print(f"Mensaje: {str(e)}", file=sys.stderr)
+                traceback.print_exc() 
+                
+                # Opcional: Borrar el registro del documento si la subida falló
+                # documento.delete() 
+                
+                return Response(
+                    {"error": "Fallo al subir a Supabase", "details": str(e)}, 
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
 
         return Response(self.get_serializer(documento).data, status=status.HTTP_201_CREATED)
