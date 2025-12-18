@@ -38,7 +38,7 @@ CORS_ALLOW_CREDENTIALS = True
 # settings.py
 SUPABASE_URL = os.environ.get('SUPABASE_URL')
 SUPABASE_KEY = os.environ.get('SUPABASE_KEY')
-SUPABASE_BUCKET = 'expedientes-pdfs'  # Nombre del bucket
+SUPABASE_BUCKET = os.environ.get('SUPABASE_BUCKET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
